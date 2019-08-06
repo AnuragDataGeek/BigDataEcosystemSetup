@@ -1,0 +1,126 @@
+
+Flume Installation to be done after Hadoop Installation
+
+Flume Installation:
+
+Follow the link https://www.tutorialspoint.com/apache_flume/apache_flume_environment.html
+
+1. Download Flume from below link http://www.apache.org/dyn/closer.lua/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz
+2. Login to hduser: su hduser
+3. Create "Flume" Directory under hduser root: mkdir Flume
+4. Untar the downloaded zip : tar xzf apache-flume-1.9.0-bin.tar.gz
+5. Move unzipped folder to the above Flume directory:mv apache-flume-1.9.0-bin/* /home/hduser/Flume/
+   
+3. Edit the “.bashrc” file, to edit .bashrc file we will use below command
+   vi .bashrc command
+4. Copy the below text into the file
+
+#HADOOP VARIABLES START
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre/
+
+export HADOOP_HOME=/usr/local/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+
+export PATH=$PATH:/JAVA_HOME/bin/
+
+#FLUME!!!
+
+
+export FLUME_HOME=/home/hduser/Flume
+export PATH=$PATH:/FLUME_HOME/bin
+export CLASSPATH=$CLASSPATH:/FLUME_HOME/lib/*
+
+
+#HADOOP VARIABLES END
+
+5. Execute the file using:
+   source .bashrc
+6. Navigate to Flume conf folder : cd ~/Flume/conf
+7. Rename Flume-conf.properties.template file as flume-conf.properties and flume-env.sh.template as flume-env.sh
+8. Verify the installation by running the below command:
+   ~/Flume/bin/./flume-ng
+
+How to Run with our .conf file
+
+~/Flume$ bin/flume-ng agent -n hdfs-agent -c conf -f conf/flume-hdfs.conf -Dflume.root.logger=DEBUG,console
+
+
+
+
+
+
+Hadoop Installation:(Ref: https://www.bogotobogo.com/Hadoop/BigData_hadoop_Install_on_ubuntu_16_04_single_node_cluster.php)
+
+1. Adding a dedicated Hadoop user
+   sudo addgroup bigdata
+   sudo adduser --ingroup bigdata hduser
+   Adding user `hduser' ...
+Adding new user `hduser' (1001) with group `bigdata' ...
+Creating home directory `/home/hduser' ...
+Copying files from `/etc/skel' ...
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+Changing the user information for hduser
+Enter the new value, or press ENTER for the default
+	Full Name []: 
+	Room Number []: 
+	Work Phone []: 
+	Home Phone []: 
+	Other []: 
+Is the information correct? [Y/n] Y
+
+2. Check if group and user is created
+   groups hduser
+
+3. Check if ssh works
+   ssh localhost
+
+4. Installing Hadoop
+   wget http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.6.5/hadoop-2.6.5.tar.gz
+
+   tar xvzf hadoop-2.6.5.tar.gz
+  
+5. We want to move the Hadoop installation to the /usr/local/hadoop directory. So, we should create the directory first:
+   sudo mkdir -p /usr/local/hadoop
+   [sudo] password for hduser: 
+   hduser is not in the sudoers file. This incident will be reported. 
+
+6. We can check again if hduser is not in sudo group:
+
+   hduser@laptop:~$ sudo -v
+   Sorry, user hduser may not run sudo on laptop.
+
+7. Give sudo permissions to the user
+   administrator@root:~$ sudo usermod -aG sudo hduser
+   [sudo] password for administrator: 
+
+   administrator@root:~$ sudo adduser hduser sudo
+   The user `hduser' is already a member of `sudo'.
+   administrator@root:~$ su hduser
+   Password: 
+   To run a command as administrator (user "root"), use "sudo <command>".
+   See "man sudo_root" for details.
+
+   hduser@root:/home/administrator$ cd
+   hduser@root:~$ cd hadoop-2.6.5/
+   hduser@root:~/hadoop-2.6.5$ ls
+   bin  etc  include  lib  libexec  LICENSE.txt  NOTICE.txt  README.txt  sbin  share
+
+8. We want to move the Hadoop installation to the /usr/local/hadoop directory. So, we should create the directory first. Now, the hduser has root priviledge, we can move the Hadoop installation to the /usr/local/hadoop directory without any problem:
+   hduser@root:~/hadoop-2.6.5$ sudo mkdir -p /usr/local/hadoop
+   hduser@root:~/hadoop-2.6.5$ sudo mv * /usr/local/hadoop
+   hduser@root:~/hadoop-2.6.5$ sudo chown -R hduser:bigdata /usr/local/hadoop
+   hduser@root:~/hadoop-2.6.5$ 
+
+Setup Configuration Files(Refer exactly to link : https://www.bogotobogo.com/Hadoop/BigData_hadoop_Install_on_ubuntu_16_04_single_node_cluster.php under "Setup Configuration Files")
+
+
+
